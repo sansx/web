@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<style type="text/css" media="screen">
+		a{text-decoration: none;display: inline-block;height: 40px;width: 200px;background: #ccc;margin-top: 5px;border-left: 5px solid #eee;line-height: 40px;text-indent: 10px;overflow: hidden;}
+		a:hover{border-left: 5px solid brown;}
+		#ipt{transition: all .5s ease;display: inline-block;border-radius: 50%;height: 35px;width: 35px;border:5px solid #eee;margin-left: 50%;transform:translateX(-50%);background: #c2ccd0;}
+		#ipt:hover,#ipt:focus{border-radius: 5px;height: 25px;width: 200px;}
+		#box{margin-left: 50%;transform:translateX(-50%);display: inline-block;position: relative;}
+	</style>
+</head>
+<body>
+<div id="box">
+	<input type="text" name="" id="ipt">
+	<div id="ser"></div>
+</div>
+	<script type="text/javascript" src='js/jquery.js'></script>
+	<script type="text/javascript">
+		$(function(){
+			var aa;
+			$('#ipt').bind('keyup',function(event){
+				if (event.keyCode==13) {
+					clearTimeout(timer);
+					var timer = setTimeout(findwiki($(this).val()),100);
+					
+				}
+				
+				
+			}).blur(function(){
+				$(this).val('');
+			})
+
+			function findwiki(aa){
+				$('#ser').text('');
+				$.ajax({
+				url:"https://zh.wikipedia.org/w/api.php?",
+				method :'get',
+				dataType:'jsonp',
+				//headers:{Origin:'zh.wikipedia.org'},
+				data:{
+					format:'json',
+					action:'query',
+					//list:'random',
+					//titles:'国家',
+					prop:'info',
+					inprop:'preload|url',
+					generator:'prefixsearch',
+					gpssearch:aa,
+					converttitles:'',
+					redirects:'',
+					//eititle:'Template:Stub',
+					//callback:'11'
+				},success:function(aa){
+					var str='';
+					var arr = [];
+					
+					for(var j in aa.query.pages){
+						arr.push(j);
+					}
+					var bb = arr.length>10?10:arr.length;
+					for (var i = 0; i < bb; i++) {
+						//str+=aa.query.pages[arr[i]].title+'<br/>';
+						$('#ser').append('<a href='+aa.query.pages[arr[i]].fullurl+' title='+aa.query.pages[arr[i]].title+'>'+aa.query.pages[arr[i]].title+'</a><br/>');
+					}
+					$('a').click(function(event){
+						event.preventDefault();
+						aa = $(this).attr('href');
+						$('div').animate({'opacity':0,'top':'-100px'},500,function(){
+							window.location.href=aa;
+						});
+						
+						//slideToggle('slow',);
+						//
+					})
+					
+				}
+			})
+			}
+			
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src='js/jquery.js'></script>
+	<style type="text/css">
+		select{height: 200px;width: 80px;}
+		#sec button{}
+		ul,li,div{list-style: none;margin: 0;padding: 0;}
+		li{display: inline-block;border:1px solid #ccc;margin-top: 10px;cursor: pointer;}
+		.tab_box{border:1px solid #000;width: 150px;height: 100px;}
+		.hide{display: none}
+		.selected{background: #ccc;}
+		.hover{background: #cac;}
+	</style>
+</head>
+<body>
+	<h2>1.checkbox 选择操作</h2>
+	<form>
+		你喜欢的运动是？
+		<input type="checkbox" name="" value="足球">足球
+		<input type="checkbox" name="" value="篮球">篮球
+		<input type="checkbox" name="" value="羽毛球">羽毛球
+		<input type="checkbox" name="" value="乒乓球">乒乓球
+		<button type="button" id="all">全选/全不选</button>
+		<button type="button" id="re">反选</button>
+		<button type="button" id="sub">提交</button>
+	</form>
+	<h2>2.多选项设置<small>(双击选项转移)</small></h2>
+	<form id="sec">
+		<select multiple="multiple" id="lsel">
+			<option value="">测试1</option>
+			<option value="">测试2</option>
+			<option value="">测试3</option>
+			<option value="">测试4</option>
+			<option value="">测试5</option>
+			<option value="">测试6</option>
+		</select>
+		<button type="button" id="ltr" title="转移选中项">>|</button>
+		<button type="button" id="allr" title="全部转移">>></button>
+		<button type="button" id="rtl" title="转移选中项">|<</button>
+		<button type="button" id="alll" title="全部转移"><<</button>
+		<select multiple="multiple" id="rsel">
+			
+		</select>
+	</form>
+	<h2>3.简易选项卡</h2>
+	<div class="tab">
+		<div class="tab_menu">
+			<ul>
+				<li class="selected">时事</li>
+				<li>体育</li>
+				<li>娱乐</li>
+			</ul>
+		</div>
+		<div class="tab_box">
+			<div>时事</div>
+			<div class="hide">体育</div>
+			<div class="hide">娱乐</div>
+		</div>
+	</div>
+	<p>网页换肤...[待续5.4]</p>
+</body>
+<script type="text/javascript">
+	$(function(){
+		var isall = 0;
+		$('#all').click(function(){
+			isall==0?isall=1:isall=0;
+			isall==1?$('input:checkbox').attr('checked',true):$('input:checkbox').attr('checked',false);
+		});
+		$('#re').click(function(){
+			$("input:checkbox").each(function(){
+				$(this).attr('checked',!$(this).attr('checked'));
+			});
+		});
+		$('#sub').click(function(){
+			var str = '选中的是';
+			$("input:checkbox:checked").each(function(){
+				console.log($(this).val());
+				str+=(' '+$(this).val());
+			});
+			alert(str);
+		})
+		$('#ltr').click(function(){
+			$('#lsel :selected').each(function(){
+				$(this).appendTo($('#rsel'));
+			})
+		})
+		$('#allr').click(function(){
+			$('#lsel option').appendTo($('#rsel'));
+		})
+		$('#rtl').click(function(){
+			$('#rsel :selected').each(function(){
+				$(this).appendTo($('#ltr'));
+			})
+		})
+		$('#alll').click(function(){
+			$('#rsel option').appendTo($('#lsel'));
+		})
+		$('select').dblclick(function(){
+			var aa = $(this).find('option:selected').parent().attr('id');
+			aa=='lsel'?bb='rsel':bb='lsel';
+			$('#'+aa+' option:selected').appendTo('#'+bb);
+		})
+		$('.tab_menu li').click(function(){
+			$(this).addClass('selected').siblings().removeClass('selected');
+			var index = $(this).index();
+			console.log(index);
+			$('.tab_box>div').eq(index).show().siblings().hide();
+		}).hover(function(){
+			$(this).addClass('hover');
+		},function(){
+			$(this).removeClass('hover');
+		})
+	})
+</script>
+</html>
