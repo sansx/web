@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<style type="text/css">
+		
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+	
+	<script type="text/javascript" src='js/jquery.js'></script>
+	<script type="text/javascript" src='http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js'></script>
+	<script type="text/javascript">
+		$(function(){
+			if (remote_ip_info.city!=='') {
+				var aa = remote_ip_info.city;
+				$.ajax({
+					url:'http://api.k780.com/',
+					type:'get',
+					dataType:'jsonp',
+					jsonp:'jsoncallback',
+        			//jsonpCallback:'data',
+					data:{
+						app:'weather.future',
+						weaid:aa,
+						format:'json',
+						appkey:'10003',
+						sign:'b59bc3ef6191eb9f747dd4e83c99f2a4'
+					},success:function(a){
+						$('#box').append('<p>'+a.result[1].citynm+'</p>');
+						for (var i in a.result) {
+							//str += a.result[i].week;
+							$('#box').append('<div><span>日期：'+a.result[i].days+'</span><span>'+a.result[i].week+'</span><p>气温：'+a.result[i].temperature+'  天气：'+a.result[i].weather+'<img src="'+ a.result[i].weather_icon+'"></p></div>');
+						}
+						
+					}
+					//&jsoncallback=1
+				})
+			}
+		})
+			
+	</script>
+</body>
+</html>
