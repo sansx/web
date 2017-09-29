@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/chat.css">
+	<script type="text/javascript" src='js/jquery.js'></script>
+</head>
+<body>
+	<div id="box">
+		<div id="outb">
+			<div id="chatinfo">
+			</div>
+		</div>
+		<div id='chatipt'>
+			<input type="text" name="" placeholder="点击输入" />
+			<button type="button">发送</button>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			//$('#outb')[0].style.position = 'relative';
+			var state = 0;
+			var name=prompt("输入名称");
+			var info = '';
+			var timer = '';
+			if(name!==null){
+				alert('可以开始聊天了');
+				setInterval(getinfo,"1000");
+				timer = setTimeout(candel,'300000');
+			}else{
+				alert('没有用户名');
+				location.reload(true);
+			};
+			
+			var aa=0;
+			$('#chatinfo').css('position','relative');
+			//console.log($('#chatinfo')[0].offsetTop);
+			$('#chatinfo').on('mousewheel',function(event){
+				//alert(event.deltaY);
+				var bb=$(this)[0].offsetHeight-$(this).parent().height()+$(this)[0].offsetTop;
+				if(event.originalEvent.deltaY>0){
+					if (bb>=0) {
+						aa-=20;
+						//$(this).animate({'top':aa+'px'},10);
+					}
+				}else if(event.originalEvent.deltaY<0){
+					aa>=0?aa=0:aa+=20;
+				};
+				//console.log($(this).position({top:'10px'}),bb);
+				/*$(this)[0].scrollHeight+$(this)[0].offsetTop;
+				$(this)[0].offsetTop;*/
+				$('#chatinfo').css({'top':aa+'px'});
+			})
+			$('input').on('keypress',function(e){
+				if(e.keyCode==13&&$(this).val()!=''){
+					clearTimeout(timer);
+					echo(timer+'!');
+					info = $(this).val();
+					$('#chatinfo').append('<div><p class="my">'+$(this).val()+'</p></div>');
+					$(this).val('');
+					var bb = $('#chatinfo')[0].offsetHeight-$('#chatinfo').parent().height();
+					aa = -bb;
+					$('#chatinfo').animate({'top':aa+'px'},600);
+					chatsend(name,info);
+					timer=setTimeout(candel,'300000');
+				}
+			})
+			$('button').on('click',function(e){
+				if($('input').val()!==''){
+					console.log($('input').val());
+				}
+			})
+			
+
+			function echo(a){
+				console.log(a);
+			}
+			function chatsend(aname,info){
+				$.ajax({
+					url:'php/chatdata.php',
+					type:'post',
+					data:{
+						name:aname,
+						info:info,
+						num:''
+					},
+					success:function(a){
+						//echo(JSON.parse(a).info);
+						/*$('#chatinfo').append('<div><p class=yinfo>'+JSON.parse(a).info+'</p></div>');
+						var bb = $('#chatinfo')[0].offsetHeight-$('#chatinfo').parent().height();
+						aa = -bb;
+						$('#chatinfo').animate({'top':aa+'px'},600);*/
+						echo(a);
+					}
+				})
+			}
+			function getinfo(){ 
+				if (state==1) {
+					return;
+				}
+
+				state=1;
+				$.ajax({
+					url:'php/chatdata.php',
+					type:'post',
+					data:{
+						name:name,
+						info:'',
+						num:$('#chatinfo div').length
+					},success:function(a){
+						if (a=='') {if (timer==''){timer=setTimeout(candel,'300000');}return;};
+						for(var i in JSON.parse(a)){
+							$('#chatinfo').append('<div><p class=yinfo>'+JSON.parse(a)[i].info+'</p></div>');
+							var bb = $('#chatinfo')[0].offsetHeight-$('#chatinfo').parent().height();
+							aa = -bb;
+							$('#chatinfo').animate({'top':aa+'px'},200);
+							clearTimeout(timer);
+							timer='';
+						};
+						echo(JSON.parse(a),state);
+					},complete:function(){
+						state=0;
+					}
+				})
+			}
+			function candel(){
+				$.ajax({
+					url:'php/chatdata.php',
+					type:'post',
+					data:{
+						name:'',
+						info:'',
+						num:'del'
+					},success:function(a){
+						echo(a);
+						if(confirm('已重置，继续聊天？')){
+							location.reload(true);
+						}else{
+							window.close();
+						}
+						
+					}	
+				})
+			}
+			
+
+		})
+	</script>
+</body>
+</html>
