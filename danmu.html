@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/danmu.css">
+	
+</head>
+<body>
+	<div class="box">
+		<div class="show-box">
+			<span class="start">&#9658</span>
+			<div class="show"></div>
+			<div class="send-box">
+				<input type="text" class="addanmu">
+				<button type="button">SEND</button>
+			</div>
+			
+		</div>
+		<div class="danmu-box">
+			
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript">
+		var time = 0;
+		var danmu = [];
+		for(let i=0;i<15;i++){
+			for(let j=0;j<5;j++){
+				danmu.push({text:'dyfgsudgfs',time:i});
+			}
+			
+		};
+		
+		$(()=>{
+			$('button').on('click',()=>{iptdm();});
+			$('.addanmu').on('keypress',function(ev){
+				if (ev.keyCode==13) {
+					iptdm();
+				}
+			});
+			danmu.forEach((aa)=>{
+				$(".danmu-box").append($(`<span class="danmu">
+						<span title=${aa.text}>${aa.text}</span>
+						<span>${cgtime(aa.time)}</span>
+						</span>`));
+			});
+			var iptdm = ()=>{
+				if (time==0) {alert('请点击开始按钮');return;}
+				var gttext = $('.addanmu').val();
+				var ntime = $('.start').text();
+				if(gttext!=''){
+					danmu.push({
+						'text':gttext,
+						'time':time
+					});
+					$(".danmu-box").append($(`<span class="danmu">
+						<span title=${gttext}>${gttext}</span>
+						<span>${ntime}</span>
+					</span>`));
+						}
+					
+					};
+			var mvdm = (gttext)=>{
+				var rdtop = Math.random()*($('.show').css('height').match(/\d+/)[0]-30)+'px';
+				var rdcolor = `rgb(${Math.round(255*Math.random())},${Math.round(255*Math.random())},${Math.round(255*Math.random())})`;
+				var rdspeed = 7000+Math.round(2000*Math.random()-1000);
+				var rdfont = (20+Math.round(Math.random()*10))+'px';
+				var aa ='';
+				$(`<div>
+				${gttext}
+			</div>`).appendTo($('.show')).css({'position':'absolute','font-size':rdfont,'font-weight':'bold','color':rdcolor,'background-color ':'red','height':'20px','top':rdtop,'right':function(){aa = $(this).css('width').match(/\d+/)[0]*-1;return aa},'display':'inline-block'}).animate({'left':`${aa}`},rdspeed,'linear',function(){$(this).remove();});
+			};
+			$('.start').on('click',function(){
+			$(this).text('').css({'fontSize':'15px'});
+			$(this).animate({'height':'20px'},500,function(){
+				$(this).text('- - : - -').css({'lineHeight':'18px'},{'textIndent':'0px'});
+				$(this).off('click');
+			});
+			var recss = {
+				'background-color':'#ddd',
+				'height':'40px',
+				'width':'40px',
+				'border-radius':'50%',
+				'text-align':'center',
+				'line-height':'40px',
+				'font-size':'20px',
+				'font-weight':'bold',
+				'transform':'rotate(90deg)',
+				'position':'absolute',
+				'right':'2%',
+				'top':'2%',
+				'cursor':'pointer',
+				'z-index':'4',
+				'opacity':'.7'
+			}
+			$('<div title="retime">&#8635</div>').appendTo($('.show-box')).css(recss).on('click',()=>{$('.show').text('');time=0;});
+			setInterval(function(){
+				$('.start').text(cgtime(time));
+				//$('.start').text(time);
+				danmu.forEach((aa)=>{
+					if(aa.time==time){
+						mvdm(aa.text);
+					}
+				})
+				time++;
+			},1000);
+		})
+		});
+		var cgtime = (time)=>{
+					if (time<60) {
+						if (time<10) {
+							return `00:0${time}`;
+						}else{
+							return `00:${time}`;
+						}
+					}else{
+						if (time<600) {
+							if (time%60<10) {
+								return `0${Math.floor(time/60)}:0${time%60}`;
+							}else{
+								return `0${Math.floor(time/60)}:${time%60}`;
+							}
+						}else{
+							if (time%60<10) {
+								return `${Math.floor(time/60)}:0${time%60}`;
+							}else{
+								return `${Math.floor(time/60)}:${time%60}`;
+							}
+						}
+					}
+
+				}
+		
+	</script>
+</body>
+</html>
