@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/ball.js"></script>
+</head>
+<body>
+	<canvas id='can' height="500" width="500"></canvas>
+	<script type="text/javascript">
+		$(function(){
+			var can = $('#can')[0].getContext('2d');
+			$('#can').css('background',"#eee");
+			var H = $('#can').height();
+			var W = $('#can').width();
+			var balls = [];
+			for (let i=0;i<=50;i++) {
+				balls.push(new Ball({
+				x:W*Math.random(),
+				y:H*Math.random(),
+				r:10-Math.random()*5,
+				vy:0
+				}));
+			}
+			
+			
+			
+			(function move(){
+				window.requestAnimationFrame(move);
+				can.clearRect(0,0,W,H);
+				let i=balls.length;
+				while(i--){
+					ballbox(balls[i]);
+				}
+			})()
+			function ballbox(ball){
+				let g = 0.1;
+				ball.paint(can);
+				ball.y+=ball.vy;
+				ball.vy+=g;
+				if(ball.y+ball.r>=H){
+					if(ball.vy<=1){
+						g=0;
+						ball.vy=0;
+						ball.y=H-ball.r;
+					}else{
+						ball.y=H-ball.r;
+						ball.vy*=-0.8;
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

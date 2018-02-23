@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<style type="text/css" media="screen">
+	*{
+		margin: 0;
+		padding: 0;
+	}	
+	</style>
+
+	<!-- <script type="text/javascript" src="js/ball.js"></script> -->
+</head>
+<body>
+	<canvas id='can' width="1000" height="500"></canvas>
+	<script type="text/javascript" src="js/nball.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			var canv = document.getElementById('can');
+			//canv.style.background = '#eee';
+			canv.style.border = '1px solid #000';
+			canv.style.boxShadow = '1px 1px 5px #000';
+			var can = canv.getContext('2d');
+			//let{oldtime,clickbox,num,ballbox} = [];
+			let oldtime = [],clickbox = [],num = [],ballbox = [],
+			W = canv.width,H = canv.height,c;
+			num.push([0,1,2,3,4,5,9,10,11,12,13,14],[1,4,5,6,7,8,9,14],[0,2,3,4,5,7,9,10,11,12,14],[0,2,4,5,7,9,10,11,12,13,14],[0,1,2,7,10,11,12,13,14],[0,1,2,4,5,7,9,10,12,13,14],[0,1,2,3,4,5,7,9,10,12,13,14],[0,5,7,8,9,10,11],[0,1,2,3,4,5,7,9,10,11,12,13,14],[0,1,2,4,5,7,9,10,11,12,13,14]);
+			clickbox.push(drawbox(3,5,15,10),drawbox(3,5,15,6),drawbox(3,5,15,0),drawbox(3,5,15,-4),drawbox(3,5,15,-10),drawbox(3,5,15,-14));
+			clickbox.reverse();
+			drawPoint(115,20,15,W,H);
+			drawPoint(-175,20,15,W,H);
+			(function move(){
+				window.requestAnimationFrame(move);
+				let time = new Date();
+				let arr = [];
+				can.clearRect(0,0,W,H);
+				can.strokeStyle = 'rgb(0,0,0)';
+				arr.push(getnum(time.getHours()),getnum(time.getMinutes()),getnum(time.getSeconds()));
+				clickbox.push(drawbox(3,5,15,10),drawbox(3,5,15,6),drawbox(3,5,15,0),drawbox(3,5,15,-4),drawbox(3,5,15,-10),drawbox(3,5,15,-14));
+				clickbox.reverse();
+				drawPoint(115,20,12,W,H,c);
+				drawPoint(-175,20,12,W,H,c);
+				if (oldtime.length==0) {
+					oldtime = arr[0].concat(arr[1],arr[2]);
+					console.log(oldtime);
+				}else{
+					let narr = arr[0].concat(arr[1],arr[2]);
+
+					for (let i = 0; i < oldtime.length; i++) {
+						if (oldtime[i]!=narr[i]) {
+							// c='rgb('+Math.floor(Math.random()*50+150)+','+Math.floor(Math.random()*50+150)+','+Math.floor(Math.random()*100+50)+')';
+							if(i==oldtime.length-1){
+								c==''?c='rgb(255,255,255)':c='';
+							}
+							
+
+							for(let j=0;j<num[oldtime[i]].length;j++){
+								ballbox.push(new Ball({
+									x:clickbox[i][num[oldtime[i]][j]].ax,
+									y:clickbox[i][num[oldtime[i]][j]].ay,
+									r:12,
+									vx:Math.floor(Math.random()*10-5),
+									vy:Math.floor(-Math.random()*15+7),
+									fillStyle:'rgb('+Math.floor(Math.random()*50-5)+','+Math.floor(Math.random()*50+150)+','+Math.floor(Math.random()*100+50)+')'
+								}));
+							}
+							
+						}
+
+					}
+
+					oldtime=narr;
+				}
+				drawnum(0,arr[0]);
+				drawnum(2,arr[1]);
+				drawnum(4,arr[2]);
+				can.save();
+				can.translate(W/2,H/2);
+				let i=ballbox.length;
+				while(i--){
+					if(ballbox[i].y+ballbox[i].r>H/2){
+						if (ballbox[i].state == 1) {
+							//console.log('已删除第'+i+'个，'+ballbox[i].y);
+							ballbox.splice(i,1);
+						}else{
+							ballbox[i].y=H/2-ballbox[i].r;
+							ballbox[i].vy*=-0.8;
+							ballbox[i].state = 1;
+						}
+						
+						
+						//console.log(ballbox[i].y,ballbox[i].vy);
+					}else{
+						if(ballbox[i].x+ballbox[i].r>W/2){
+							ballbox[i].x=W/2-ballbox[i].r;
+							ballbox[i].vx*=-1;
+							drawball(ballbox[i],can);
+						}else{
+							drawball(ballbox[i],can);
+						}
+						
+					}
+					
+				}
+				can.restore();
+				
+			})();
+
+			function drawball(ball,can){
+
+				let g=0.5;
+				ball.draw(can);
+				ball.x+=ball.vx;
+				ball.y+=ball.vy;
+				
+				ball.vy+=g;
+				//console.log(ball.x,ball.y);
+			}
+			function drawnum(anum,arr,r){
+				can.save()
+				can.translate(W/2,H/2);
+				for(let i=0;i<num[arr[1]].length;i++){
+				let aball = new Ball({
+				x:clickbox[anum+1][num[arr[1]][i]].ax,
+				y:clickbox[anum+1][num[arr[1]][i]].ay,
+				r:12
+				}).draw(can);
+				}
+				for(let i=0;i<num[arr[0]].length;i++){
+				let aball = new Ball({
+				x:clickbox[anum][num[arr[0]][i]].ax,
+				y:clickbox[anum][num[arr[0]][i]].ay,
+				r:12
+				}).draw(can);
+				}
+				can.restore();
+			}
+			function getnum(num){
+				let arr = [];
+				if(num<10){
+					arr=[0,num];
+				}else{
+					arr=[Math.floor(num/10),num%10];
+				}
+				return arr;
+			}
+
+			function drawbox(x,y,r,ox,oy){
+				let arr = new Array();
+				for(let i=0;i<x;i++){
+					for(let j=0;j<y;j++){
+						let ax = i*2*r+ox*2*r;
+						let ay = j*2*r-4*r;
+						arr.push({ax,ay});
+						//can.clearRect(0,0,W,H);
+						/*can.save();
+						can.beginPath();
+						can.translate(W/2,H/2);
+						can.moveTo(80+20+i*L,-50+j*T);
+						can.arc(ax,ay,r,0,2*Math.PI);
+						can.stroke();
+						can.beginPath();
+						can.restore();*/
+					}
+				}
+				//console.log(arr);
+				return arr;
+			}
+			
+			function drawPoint(x,y,r,w,h,c='rgb(0,0,0)'){
+				can.beginPath();
+				can.save();
+				can.strokeStyle = 'rgb(0,0,0)';
+				can.fillStyle = c;
+				can.translate(w/2,h/2);
+				can.arc(x,y,r,0,2*Math.PI);
+				can.moveTo(x+r,-y);
+				can.arc(x,-y,r,0,2*Math.PI);
+				//can.stroke();
+				can.fill();
+				can.restore();
+				can.beginPath();
+			}
+		}
+	</script>
+</body>
+</html>

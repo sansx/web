@@ -1,0 +1,70 @@
+.gamebox {
+  height: 600px;
+  width: 600px;
+  margin-left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  position: relative; }
+
+.cover {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+  display: none;
+  text-align: center;
+  font-size: 30px; }
+
+.box {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
+  height: 200px;
+  width: 200px;
+  position: relative;
+  line-height: 0;
+  vertical-align: bottom; }
+
+.mask {
+  z-index: 3;
+  height: 100%;
+  display: inline-block;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.title {
+  background: #EEE;
+  height: 50%;
+  width: 100%;
+  line-height: 50px; }
+
+.title p {
+    line-height: 30px;
+    padding: 0 10%; }
+
+.choose {
+  height: 50%;
+  width: 100%;
+  display: table; }
+
+.choose .left, .choose .right {
+    height: 100%;
+    width: 50%;
+    display: inline-block;
+    font-size: 100px;
+    vertical-align: middle;
+    display: table-cell;
+    cursor: pointer; }
+
+.cheer {
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+  -webkit-transform: rotate(360deg);
+          transform: rotate(360deg); }
+
+/*# sourceMappingURL=index.css.map */

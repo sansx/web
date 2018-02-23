@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<style type="text/css">
+		
+		
+	</style>
+</head>
+<body>
+	<div>
+  </div>
+	
+<script>
+	class People{
+		constructor(name,age){
+			this.name = name;
+			this.age = age;
+		}
+	}
+	window.onload = function(){
+	  window.onclick = function(e){
+	  	console.log(e);
+	  	var ap = new People('Micle','25');
+	  	console.log(ap.name);
+	  }
+	  var i=100;
+	  $('body').append('<canvas id="can" height="500" width="500" ></canvas>');
+	  $('#can').css({background:'#ccc'});
+	  var can = $('#can')[0].getContext('2d');
+	  var aa = 0;
+	  (function move(){
+	  	window.requestAnimationFrame(move);
+	  	can.clearRect(0,0,500,500);
+	  	can.beginPath();
+	    can.arc(250,250,i,0,2*Math.PI,false);
+	    can.fillStyle='blue';
+	    can.stroke();
+	    can.fill();
+	  	/*if (i<50) {
+	  		aa=0;
+	  		aa==0?i+=5:i-=5;
+	  	}else if(i>=50&&i<=150){
+	  		aa==0?i+=5:i-=5;
+	  	}else if(i>=150){
+	  		aa=1;
+	  		aa==0?i+=5:i-=5;
+	  	}*/
+	  	aa+=0.05;
+	  	aa%=(2*Math.PI);
+	  	i+=(Math.sin(aa)*2);
+	  })();
+	  (function domove(){
+	  	window.requestAnimationFrame(domove);
+	  	
+
+	  	can.save();
+	  	can.translate(250,250);
+	  	can.rotate(aa);
+	  	can.lineWidth = 10;
+	  	can.lineJoin = 'round';
+	  	can.lineCap = 'round';
+	  	//can.origin(250,250);
+	  	can.moveTo(0,0);
+	  	can.lineTo(150,0);
+	  	can.lineTo(150-Math.tan(45*Math.PI/180)*20,-Math.tan(45*Math.PI/180)*20);
+	  	can.moveTo(150,0);
+	  	can.lineTo(150-Math.tan(45*Math.PI/180)*20,Math.tan(45*Math.PI/180)*20);
+	  	can.stroke();
+	  	can.restore();
+	  	
+	  })()
+	};   
+
+</script> 
+</body>
+</html>
+
+
+

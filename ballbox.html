@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="js/jquery.js"></script>
+
+	<script type="text/javascript" src="js/ball.js"></script>
+</head>
+<body>
+	<canvas id='can' height=500 width=500></canvas>
+	<script type="text/javascript">
+		$(function(){
+			var canva = $('#can')[0];
+			canva.style.background = '#ccc';
+			var can = canva.getContext('2d');
+			var H = $('#can').height();
+			var W = $('#can').width();
+			var ball = new Ball({
+				x:H/2,
+				y:W/2,
+				r:50
+			}).paint(can);
+			
+			let ang = 0;
+			const SWIN = 160;
+			
+			(function move(){
+				window.requestAnimationFrame(move);
+				can.clearRect(0,0,500,500);
+				if(ang<Math.PI){
+					drawline();
+				}
+				
+				can.beginPath();
+				// can.save();
+				// can.translate(H/2,W/2);
+				// can.scale(1,0.2);
+				// can.arc(0,0,100,0,2*Math.PI);
+				// can.stroke();
+				// can.restore();
+				ball.x=Math.cos(ang)*100+H/2;
+				ball.y=Math.sin(ang)*20+H/2;
+				ball.r = 50+Math.sin(ang)*20;
+				can.lineWidth=5;
+				ball.paint(can);
+				if(ang>=Math.PI){
+					drawline();
+				}
+				ang+=0.04;
+				ang%=Math.PI*2;
+				
+			})()
+			function drawline(){
+				can.beginPath();
+				can.moveTo(W/2,0);
+				can.lineTo(W/2,H);
+				can.moveTo(W/2+10,0);
+				can.lineTo(W/2+4,H);
+				can.moveTo(W/2-10,0);
+				can.lineTo(W/2-4,H);
+				can.stroke();
+
+			}
+		})
+	</script>
+</body>
+</html>

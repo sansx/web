@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/twitch.css">
+</head>
+<body>
+	<div class="tv-box">
+		<div class="title">Twitch.tv showing</div>
+		<div class="top"></div>
+		<div class="menu"></div>
+	</div>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript">
+		$(()=>{
+			var users = ["freecodecamp", "storbeck", "terakilobyte", "habathcx","RobotCaleb","thomasballinger","noobs2ninjas","beohoff"];
+			var getinfo = (tp,name)=>{
+				var url = `https://wind-bow.glitch.me/twitch-api/${tp}/${name}`;
+				return url;
+			};
+			users.forEach((user)=>{
+				var link = getinfo('channels',user);
+				var imgsty = `width:60px;height:60px;margin-left:30px;background:#000;display:inline-block;vertical-align:top;border-radius:10px;`;
+				var asty = `font-size:20px;text-indient:5px;text-decoration:none;margin-left:20px;font-weight:bold;`;
+				var dvsty = `height:60px;width:100%;display:inline-block;line-height:60px;position:relative;margin-bottom:2px;margin-top:3px;`;
+				$.ajax({
+					url:link,
+					type:'get',
+					dataType:'json',
+					success:(res)=>{
+						if (res.name) {
+							var imgsp = res.logo?`<span style=${imgsty}background:url(${res.logo});background-size:cover;></span>`:`<span style=${imgsty}></span>`;
+
+								$(`<div class=${user} style=${dvsty}>${imgsp}<a href=${res.url} style=${asty} target='_black'>${res.name}</a></div>`).appendTo($('.menu'));
+								$.ajax({
+									url:getinfo('streams',res.name),
+									type:'get',
+									dataType:'json',
+									success:(res)=>{
+										var line = res.stream?`Now:　${res.stream.game}`:'offline';
+										var linesty = `text-align:right;position:absolute;right:100px;font-weight:bold;`;
+										
+										$(`<span style=${linesty}>${line}</span>`).appendTo($(`.${user}`));
+										
+									}
+
+								})
+							
+						}
+					}
+				})
+			});
+			
+			
+		})
+	</script>
+</body>
+</html>

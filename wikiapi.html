@@ -3,20 +3,23 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
+	<title>维基搜索</title>
 	<link rel="stylesheet" href="">
 	<style type="text/css" media="screen">
-		a{text-decoration: none;display: inline-block;height: 40px;width: 200px;background: #ccc;margin-top: 5px;border-left: 5px solid #eee;line-height: 40px;text-indent: 10px;overflow: hidden;}
+		*{margin:0;padding:0;}
+		a{text-decoration: none;display: inline-block;height: 40px;width: 200px;background: #ccc;margin-top: 2px;border-left: 5px solid #eee;line-height: 40px;text-indent: 10px;overflow: hidden;}
 		a:hover{border-left: 5px solid brown;}
 		#ipt{transition: all .5s ease;display: inline-block;border-radius: 50%;height: 35px;width: 35px;border:5px solid #eee;margin-left: 50%;transform:translateX(-50%);background: #c2ccd0;}
 		#ipt:hover,#ipt:focus{border-radius: 5px;height: 25px;width: 200px;}
 		#box{margin-left: 50%;transform:translateX(-50%);display: inline-block;position: relative;}
+		#getrand{text-align:center;text-indent:0;font-size:20px;color:#000;font-weight:bold;}
+		#getrand:hover{color:#fff;background:#392f41}
 	</style>
 </head>
 <body>
 <div id="box">
 	<input type="text" name="" id="ipt">
-	<div id="ser"></div>
+  <div id="ser"><a id='getrand' href='http://zh.wikipedia.org/wiki/Special:Random'>获取随机词条</a></div>
 </div>
 	<script type="text/javascript" src='js/jquery.js'></script>
 	<script type="text/javascript">
@@ -31,7 +34,12 @@
 				
 				
 			}).blur(function(){
-				$(this).val('');
+        $('body').click(function(){
+          $('#ipt').val('');
+      $('#ser').text('');
+      $('#ser').append('<a id="getrand" href="http://zh.wikipedia.org/wiki/Special:Random">获取随机词条</a>');
+        })
+				
 			})
 
 			function findwiki(aa){
@@ -66,21 +74,29 @@
 						//str+=aa.query.pages[arr[i]].title+'<br/>';
 						$('#ser').append('<a href='+aa.query.pages[arr[i]].fullurl+' title='+aa.query.pages[arr[i]].title+'>'+aa.query.pages[arr[i]].title+'</a><br/>');
 					}
-					$('a').click(function(event){
+       $('a').click(function(event){
 						event.preventDefault();
 						aa = $(this).attr('href');
 						$('div').animate({'opacity':0,'top':'-100px'},500,function(){
 							window.location.href=aa;
 						});
+					})
+					
 						
 						//slideToggle('slow',);
 						//
-					})
+          
 					
 				}
 			})
 			}
-			
+			$('a').click(function(event){
+						event.preventDefault();
+						aa = $(this).attr('href');
+						$('div').animate({'opacity':0,'top':'-100px'},500,function(){
+							window.location.href=aa;
+						});
+					})
 		})
 	</script>
 </body>

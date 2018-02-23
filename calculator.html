@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/calculator.css">
+</head>
+<body>
+	<div class="ca-box">
+		<div class="show"></div>
+		<div class="bot"></div>
+
+	</div>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript">
+		$(()=>{
+			
+			var renum = [];
+			var btnval = ['=','Ans','0','.','+','1','2','3','-','4','5','6','*','7','8','9','/','%','→','C'].reverse();
+			for(let i=0;i<20;i++){
+				
+					$(`<button type="button">${btnval[i]}</button>`).appendTo($('.bot')).css({height:Math.round($('.bot').height()/5-10),width:Math.round($('.bot').width()/4-10)});
+				
+			}
+
+			$('body').keypress((ev)=>{
+				//console.log(/\d|[\.\+\/\*\-]/.exec(ev.key));
+				
+				let text = $('.show').text();
+				
+				if (/\d|[\.\+\/\*\-]/.exec(ev.key)) {
+					if(text.length>22){return;};
+					$('.show').text(text+ev.key);
+				}
+				
+			})
+			$('button').on('click',function(){
+				
+				let val = $(this).text();
+				var text = $('.show').text();
+				switch(val){
+					case '=':
+					if(typeof eval($('.show').text())=='number'){
+						renum.push($('.show').text());
+						$('.show').text(eval($('.show').text()));
+					};
+					break;
+					case 'Ans':
+					$('.show').text(renum.pop());
+					break;
+					case 'C':
+					$('.show').text('');
+					break;
+					case '→':
+					var arr = text.split('');
+					arr.splice(text.length-1,1);
+					$('.show').text(arr.join(''));
+					break;
+					default:
+					if($('.show').text().length>22){return;};
+					$('.show').text(text+val);
+					break;
+				}
+			});
+		}
+			
+		)
+	</script>
+</body>
+</html>
